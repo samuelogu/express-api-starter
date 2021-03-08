@@ -1,3 +1,4 @@
+const post = require('../services/post')
 
 class postController {
 
