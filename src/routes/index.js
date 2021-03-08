@@ -9,7 +9,7 @@ routes.all("/", (req, res)=> {
     })
 })
 
-routes.use('/post', postRoutes);
+routes.use('/posts', postRoutes);
 
 
 routes.all("*", (req, res)=> {
