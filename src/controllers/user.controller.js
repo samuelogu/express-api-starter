@@ -1,7 +1,7 @@
 const user = require('../services/user.service')
 const createError = require('http-errors')
 const jwt = require('../utils/jwt')
-const redis = require('../../connectors/redis')
+const redis = require('redis')
 
 class userController {
 

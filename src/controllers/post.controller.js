@@ -1,4 +1,4 @@
-const post = require('../services/postService')
+const post = require('../services/post.service')
 
 class postController {
 
@@ -12,10 +12,7 @@ class postController {
                 data
             })
         } catch (e) {
-            res.status(400).json({
-                status: false,
-                message: "Unable to retrieve post"
-            })
+            next(createError(e.statusCode, e.message))
         }
 
     }
@@ -32,10 +29,7 @@ class postController {
                 data
             })
         } catch (e) {
-            res.status(400).json({
-                status: false,
-                message: "Unable to create post"
-            })
+            next(createError(e.statusCode, e.message))
         }
 
     }
@@ -52,10 +46,7 @@ class postController {
                 data
             })
         } catch (e) {
-            res.status(404).json({
-                status: false,
-                message: "Post doesn't exist!"
-            })
+            next(createError(e.statusCode, e.message))
         }
 
     }
@@ -73,10 +64,7 @@ class postController {
                 data
             })
         } catch (e) {
-            res.status(404).json({
-                status: false,
-                message: "Unable to update post"
-            })
+            next(createError(e.statusCode, e.message))
         }
 
     }
@@ -93,10 +81,7 @@ class postController {
                 data: null
             })
         } catch (e) {
-            res.status(404).json({
-                status: false,
-                message: "Unable to remove post"
-            })
+            next(createError(e.statusCode, e.message))
         }
 
     }

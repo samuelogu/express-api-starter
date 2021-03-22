@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const User = require("../models/User")
 const createError = require('http-errors')
 
 require('dotenv').config()
@@ -49,8 +48,6 @@ class userService {
         if (!checkPassword) throw createError.Unauthorized('Email address or password not valid')
 
         delete user.password
-        delete user.accessToken
-        delete user.refreshToken
 
         const accessToken = await jwt.signAccessToken(user)
         const refreshToken = await jwt.signRefreshToken(user)
