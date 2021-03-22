@@ -3,11 +3,11 @@ const Post = require("../models/Post")
 class postService {
 
     static async getPost() {
-        return await Post.find()
+        return Post.find()
     }
 
     static async findPost(_id) {
-        return await Post.findOne({ _id })
+        return Post.findOne({ _id })
     }
 
     static async createPost(title, body) {
@@ -24,12 +24,11 @@ class postService {
         post.body = body && body
         post.title = title && title
 
-        await post.save()
-        return post
+        return post.save()
     }
 
     static async removePost(_id) {
-        return await Post.deleteOne({ _id })
+        return Post.deleteOne({ _id })
     }
 
 

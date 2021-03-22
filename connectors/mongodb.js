@@ -4,7 +4,8 @@ const database_url = process.env.DATABASE_URL || 'mongodb://localhost:27017/my_d
 
 mongoose.connect(database_url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 }).catch(error => {
     console.error(error)
 })

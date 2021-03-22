@@ -12,9 +12,7 @@ class userService {
 
         const { email } = data
 
-        const check = await prisma.users.findUnique({
-            where: { email }
-        })
+        const check = await User.findOne({ email })
 
         if (check) {
             throw createError.Conflict('User with email address already exist')
@@ -22,7 +20,8 @@ class userService {
 
         data.password = bcrypt.hashSync(data.password, 8)
 
-        const user = await prisma.users.create({ data })
+        const newUser = new User(data)
+        const user = await newUser.save()
 
         const accessToken = await jwt.signAccessToken(user)
         const refreshToken = await jwt.signRefreshToken(user)
@@ -35,9 +34,7 @@ class userService {
 
         const { email, password } = data
 
-        const user = await prisma.users.findUnique({
-            where: { email }
-        })
+        const user = await User.findOne({ email })
 
         if (!user) {
             throw createError.NotFound('User not registered')
