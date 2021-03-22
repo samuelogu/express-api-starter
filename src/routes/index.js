@@ -1,5 +1,5 @@
 const routes = require('express').Router();
-const post = require('./post')
+const posts = require('./post')
 const auth = require('./auth')
 const createError = require('http-errors')
 
@@ -11,7 +11,7 @@ routes.all("/", (req, res)=> {
     })
 })
 
-routes.use('/post', post)
+routes.use('/posts', posts)
 routes.use('/auth', auth)
 
 routes.use( async (req, res, next) => {
