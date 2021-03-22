@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express();
 
+// connect to mongodb and redis
 require('../connectors/redis')
+require('../connectors/mongodb')
 
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
@@ -21,7 +23,6 @@ app.use(multer().array())
 app.use(cors());
 
 const port = process.env.PORT || 3000;
-const database_url = process.env.DATABASE_URL || 'mongodb://localhost:27017/my_database';
 
 app.use(morgan('dev'))
 
@@ -32,12 +33,8 @@ const routes = require('./routes')
 //  Connect all our routes to our application
 app.use('/', routes)
 
-// START THE SERVER WITH MONGODB
+// START THE SERVER
 // =============================================================================
-mongoose.connect(database_url, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-        app.listen(port, () => {
-            console.log(`Express app running on http://localhost:${port}`)
-        })
-    }).catch(error => {
-    console.error(error)
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`)
 })
