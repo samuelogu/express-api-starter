@@ -1,5 +1,9 @@
 const express = require('express')
 const app = express();
+
+require('../connectors/redis')
+
+const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const mongoose = require("mongoose")
 const multer = require('multer')
@@ -18,6 +22,8 @@ app.use(cors());
 
 const port = process.env.PORT || 3000;
 const database_url = process.env.DATABASE_URL || 'mongodb://localhost:27017/my_database';
+
+app.use(morgan('dev'))
 
 // INCLUDE API ROUTES
 // =============================================================================
