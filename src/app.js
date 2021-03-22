@@ -2,8 +2,8 @@ const express = require('express')
 const app = express();
 
 // connect to mongodb and redis
-require('../connectors/redis')
-require('../connectors/mongodb')
+require('./connectors/redis')
+require('./connectors/mongodb')
 
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
