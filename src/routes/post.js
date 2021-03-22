@@ -1,10 +1,11 @@
 const routes = require('express').Router();
-const postController = require('../controllers/post.controller')
+const post = require('../controllers/post.controller')
+const auth = require('../middlewares/auth')
 
-routes.get('/', postController.all)
-routes.post("/", postController.create)
-routes.get("/:id", postController.find)
-routes.delete("/:id", postController.remove)
-routes.put("/:id", postController.update)
+routes.get('/', auth, post.all)
+routes.post("/", auth, post.create)
+routes.get("/:id", auth, post.find)
+routes.delete("/:id", auth, post.remove)
+routes.put("/:id", auth, post.update)
 
 module.exports = routes;
