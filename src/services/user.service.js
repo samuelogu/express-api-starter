@@ -22,11 +22,12 @@ class userService {
 
         const newUser = new User(data)
         const user = await newUser.save()
+        delete data.password
 
-        const accessToken = await jwt.signAccessToken(user)
-        const refreshToken = await jwt.signRefreshToken(user)
+        data.accessToken = await jwt.signAccessToken(user)
+        data.refreshToken = await jwt.signRefreshToken(user)
 
-        return { ...user, accessToken, refreshToken }
+        return data
 
     }
 
