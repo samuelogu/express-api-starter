@@ -2,7 +2,7 @@ const post = require('../services/post.service')
 
 class postController {
 
-    static all = async (req, res) => {
+    static all = async (req, res, next) => {
 
         try {
             const data = await post.getPost()
@@ -17,7 +17,7 @@ class postController {
 
     }
 
-    static create = async (req, res) => {
+    static create = async (req, res, next) => {
 
         const { body, title } = req.body
 
@@ -34,7 +34,7 @@ class postController {
 
     }
 
-    static find = async (req, res) => {
+    static find = async (req, res, next) => {
 
         const { id } = req.params
 
@@ -51,7 +51,7 @@ class postController {
 
     }
 
-    static update = async (req, res) => {
+    static update = async (req, res, next) => {
 
         const { body, title } = req.body
         const { id } = req.params
@@ -69,7 +69,7 @@ class postController {
 
     }
 
-    static remove = async (req, res) => {
+    static remove = async (req, res, next) => {
 
         const { id } = req.params
 
