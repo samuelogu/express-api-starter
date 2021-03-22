@@ -46,7 +46,7 @@ module.exports = {
                     reject(createError.InternalServerError())
                 }
 
-                redis.SET(payload.id, token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
+                redis.SET(payload._id, token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
                     if (err) {
                         console.log(err.message);
                         reject(createError.InternalServerError())
@@ -65,10 +65,10 @@ module.exports = {
                     return reject(createError.Unauthorized(message))
                 }
 
-                redis.GET(data.payload.id, (err, reply) => {
+                redis.GET(data.payload._id, (err, reply) => {
 
                     if (err) {
-                        console.log(err.message)
+                        console.log('error', err.message)
                         reject(createError.InternalServerError())
                         return
                     }
