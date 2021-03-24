@@ -19,7 +19,7 @@ module.exports = {
                 issuer, audience: payload.email
             }, (err, token) => {
                 if (err) {
-                reject(createError.InternalServerError())
+                    reject(createError.InternalServerError())
                 }
                 resolve(token)
             })
@@ -37,6 +37,7 @@ module.exports = {
         })
     },
     signRefreshToken(payload){
+
         return new Promise((resolve, reject) => {
             jwt.sign({ payload }, refreshTokenSecret, {
                 expiresIn: refreshTokenExpires,
@@ -46,7 +47,7 @@ module.exports = {
                     reject(createError.InternalServerError())
                 }
 
-                redis.SET(payload._id, token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
+                redis.SET(JSON.stringify(payload._id), token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
                     if (err) {
                         console.log(err.message);
                         reject(createError.InternalServerError())

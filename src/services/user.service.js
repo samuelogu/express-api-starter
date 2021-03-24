@@ -50,7 +50,7 @@ class userService {
         const accessToken = await jwt.signAccessToken(user)
         const refreshToken = await jwt.signRefreshToken(user)
 
-        return { ...user, accessToken, refreshToken }
+        return { ...user._doc, accessToken, refreshToken }
 
     }
 
