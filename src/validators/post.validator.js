@@ -6,7 +6,9 @@ const schemas = {
         title: Joi.string().required()
     }),
     find: Joi.object().keys({
-        id: Joi.string().required()
+        params: {
+            id: Joi.string().required()
+        }
     })
 }
 module.exports = schemas;
