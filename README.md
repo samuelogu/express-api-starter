@@ -1,4 +1,4 @@
-#Express starter API
+# Express API starter
 
 This is a simple structured express application to get you started in build your next API. API is a production ready with mongodb and redis database. Full auth routes using access and refresh tokens. Feel free to send a pull request 😁
 
@@ -14,7 +14,7 @@ If you dont't have an existing server; You could get $100 in credit over 60 days
 
 `touch .env`
 
-You will need to have [Mongodb](https://docs.mongodb.com/manual/installation/) and [Redis](https://redis.io/download) database installed on your system to use both connectors. Update the `.env` file.
+You will need to have [Mongodb](https://docs.mongodb.com/manual/installation/) and [Redis](https://redis.io/download) installed on your system to use both connectors. Update the `.env` file.
 
 ```javascript
 DATABASE_URL=mongodb://localhost:27017/my_database
