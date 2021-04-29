@@ -9,7 +9,7 @@ const middleware = (schema, property) => {
                 }
             }
         }
-        const { error } = schema.validate(req.body, options);
+        const { error } = schema.validate(req[property], options);
         const valid = error == null;
 
         if (valid) {
