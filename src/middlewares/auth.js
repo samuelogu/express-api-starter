@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
     }
 
     await jwt.verifyAccessToken(token).then(user => {
-        req.user = user
+        req.user = user.payload
         next()
     }).catch (e => {
         next(createError.Unauthorized(e.message))
