@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors')
 const redis = require('../connectors/redis')
-
-require('dotenv').config()
+const r_uti = require('../utils/redis')
+const db = require('../connectors/knex')
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const accessTokenExpires = process.env.ACCESS_TOKEN_LIFE
@@ -27,11 +27,16 @@ module.exports = {
     },
     verifyAccessToken(token){
         return new Promise((resolve, reject) => {
-            jwt.verify(token, accessTokenSecret, (err, payload) => {
+            jwt.verify(token, accessTokenSecret, async (err, payload) => {
                 if (err) {
                     const message = err.name == 'JsonWebTokenError' ? 'Unauthorized' : err.message
                     return reject(createError.Unauthorized(message))
                 }
+                const tokenIssuer = payload.iss
+                const audience = payload.aud
+                if (issuer !== tokenIssuer) return reject(createError.Unauthorized('Unauthorized'))
+                const user = await db.table('users').where('email', audience)
+                if (!user.length) return reject(createError.Unauthorized('Unauthorized'))
                 resolve(payload)
             })
         })
@@ -47,39 +52,44 @@ module.exports = {
                     reject(createError.InternalServerError())
                 }
 
-                redis.SET(JSON.stringify(payload._id), token, 'EX', 365 * 24 * 60 * 60, (err, reply) => {
-                    if (err) {
-                        console.log(err.message);
-                        reject(createError.InternalServerError())
-                        return
-                    }
+                r_uti.add('refresh_tokens', token).then(() => {
                     resolve(token)
+                }).catch(err => {
+                    console.log(err.message);
+                    reject(createError.InternalServerError())
                 })
+
             })
         })
+
     },
     verifyRefreshToken(token){
         return new Promise((resolve, reject) => {
-            jwt.verify(token, refreshTokenSecret, (err, data) => {
+            jwt.verify(token, refreshTokenSecret, async (err, data) => {
+
                 if (err) {
                     const message = err.name == 'JsonWebTokenError' ? 'Unauthorized' : err.message
                     return reject(createError.Unauthorized(message))
                 }
 
-                redis.GET(data.payload._id, (err, reply) => {
-
-                    if (err) {
-                        console.log('error', err.message)
-                        reject(createError.InternalServerError())
-                        return
-                    }
-
-                    if (reply === token) return resolve(data)
-                    reject(createError.Unauthorized())
-
-                })
+                try {
+                    await r_uti.get(token)
+                    resolve(data)
+                }catch (e) {
+                    reject(createError(e.statusCode, e.message))
+                }
 
             })
+        })
+    },
+    removeRefreshToken(token) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await r_uti.remove(token)
+                resolve(true)
+            }catch (e) {
+                reject(createError(e.statusCode, e.message))
+            }
         })
     }
 
