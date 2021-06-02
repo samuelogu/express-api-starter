@@ -40,17 +40,7 @@ class userService {
 
         const checkEmail = await this.findBy('email', email)
 
-        if (!checkEmail.length) {
-
-            const checkUsername = await this.findBy('username', email)
-
-            if (!checkUsername.length) throw createError.BadRequest('Invalid account details')
-
-            user = checkUsername[0]
-
-        }else {
-            user = checkEmail[0]
-        }
+        user = checkEmail[0]
 
         const checkPassword = bcrypt.compareSync(password, user.password)
 
