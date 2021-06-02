@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs')
 class locationService {
 
     static async getStates() {
-        return db.table('states').orderBy('name', 'desc')
+        return db.table('states').orderBy('name', 'asc')
     }
 
     static async getCities(state_id) {

@@ -5,7 +5,7 @@ const check = require('../middlewares/check')
 const validator = require('../middlewares/validator')
 const schemas = require('../validators/user.validator')
 
-routes.post("/register", [validator(schemas.register), check.email, check.username], user.register)
+routes.post("/register", [validator(schemas.register), check.email], user.register)
 routes.get("/check-email/:email", [validator(schemas.checkEmail, 'params'), check.emailExist], user.checkEmail)
 routes.get("/check-username/:username", [validator(schemas.checkUsername, 'params'), check.usernameExist], user.checkUsername)
 routes.post("/login", validator(schemas.login), user.login)
