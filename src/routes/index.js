@@ -1,5 +1,6 @@
 const routes = require('express').Router();
-const posts = require('./post')
+const location = require('./location')
+const farm = require('./farm')
 const auth = require('./auth')
 const createError = require('http-errors')
 
@@ -7,11 +8,12 @@ routes.all("/", (req, res)=> {
 
     res.status(200).json({
         status: true,
-        message: "EXPRESS API v1.0"
+        message: "Fishmaster API v1.0"
     })
 })
 
-routes.use('/posts', posts)
+routes.use('/location', location)
+routes.use('/farm', farm)
 routes.use('/auth', auth)
 
 routes.use( async (req, res, next) => {
