@@ -83,6 +83,7 @@ model users {
   gender             String?        @db.VarChar(10)
   phone              String?        @db.VarChar(20)
   city_id            Int?
+  farm               Boolean        @default(false)
   wallet             Int            @default(0)
   password           String?        @db.VarChar(100)
   verification_token String?        @db.VarChar(100)
