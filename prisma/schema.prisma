@@ -59,6 +59,7 @@ model stocks {
   createdAt           DateTime  @default(now())
   pondId              Int
   pond                ponds     @relation(fields: [pondId], references: [id])
+  reports    reports[]
 
   @@index([pondId], name: "pondId")
 }
@@ -82,7 +83,7 @@ model users {
   email              String?        @db.VarChar(100)
   gender             String?        @db.VarChar(10)
   phone              String?        @db.VarChar(20)
-  city_id            Int?
+  cityId            Int?
   farm               Boolean        @default(false)
   wallet             Int            @default(0)
   password           String?        @db.VarChar(100)
@@ -97,15 +98,17 @@ model users {
 
 model cities {
   id       Int     @id @default(autoincrement())
-  state_id Int?
+  stateId Int
+  state      states     @relation(fields: [stateId], references: [id])
   name     String? @db.VarChar(100)
+  farms              farms[]
 }
 
 model farms {
   id        Int       @id @default(autoincrement()) @db.UnsignedInt
   name      String?   @db.VarChar(200)
-  country   String?   @default("Nigeria") @db.VarChar(100)
-  city_id   Int?
+  cityId   Int
+  city      cities     @relation(fields: [cityId], references: [id])
   location  String?   @db.VarChar(200)
   userId    Int
   user      users     @relation(fields: [userId], references: [id])
@@ -115,7 +118,8 @@ model farms {
 
 model reports {
   id                   Int      @id @default(autoincrement()) @db.UnsignedInt
-  stock_id             Int?
+  stockId             Int
+  stock      stocks     @relation(fields: [stockId], references: [id])
   day                  Int?
   present_quantity     Decimal? @db.Decimal(11, 0)
   dailly_mortality     Decimal? @db.Decimal(11, 0)
@@ -133,4 +137,5 @@ model reports {
 model states {
   id   Int     @id @default(autoincrement())
   name String? @db.VarChar(100)
+  cities              cities[]
 }
