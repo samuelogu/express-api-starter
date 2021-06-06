@@ -16,7 +16,7 @@ class locationService {
     }
 
     static async getCities(state_id) {
-        return db.table('cities').where('state_id', state_id)
+        return db.table('cities').where('stateId', state_id)
     }
 
 }
