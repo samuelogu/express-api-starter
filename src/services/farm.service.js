@@ -1,24 +1,19 @@
 const db = require('../connectors/knex')
-const randomstring = require("randomstring")
-const createError = require('http-errors')
-const EmailSender = require('../utils/email.sender')
-const emailSender = new EmailSender()
 
-require('dotenv').config()
+class farmService {
 
-const jwt = require('../utils/jwt')
-const bcrypt = require('bcryptjs')
-
-class locationService {
-
-    static async getStates() {
-        return db.table('states').orderBy('name', 'asc')
+    static async add(data) {
+        const { userId } = data
+        await db.table('users').where('id', userId).update({
+            farm: 1
+        })
+        return db.table('farms').insert(data)
     }
 
-    static async getCities(state_id) {
-        return db.table('cities').where('state_id', state_id)
+    static async find(userId) {
+        await db.table('farms').where('userId', userId)
     }
 
 }
 
-module.exports = locationService;
+module.exports = farmService;

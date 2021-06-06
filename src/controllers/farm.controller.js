@@ -20,10 +20,12 @@ class farmController {
 
     static add = async (req, res, next) => {
 
-        const { body, title } = req.body
+        const { id } = req.user
+
+        req.body.userId = id
 
         try {
-            const data = await farm.createPost(title, body)
+            const data = await farm.add(req.body)
             res.status(206).json({
                 status: true,
                 message: "farm successfully created",
@@ -35,15 +37,16 @@ class farmController {
 
     }
 
-    static find = async (req, res, next) => {
+        static find = async (req, res, next) => {
 
-        const { id } = req.params
+        const { name, id } = req.user
 
         try {
-            const data = await farm.findPost(id)
+            const data = await farm.find(id)
+
             res.status(200).json({
                 status: true,
-                message: "farm found",
+                message: `${name} farm`,
                 data
             })
         } catch (e) {
