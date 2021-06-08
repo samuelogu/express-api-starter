@@ -59,6 +59,8 @@ model stocks {
   createdAt           DateTime  @default(now())
   pondId              Int
   pond                ponds     @relation(fields: [pondId], references: [id])
+  userId              Int
+  user                users     @relation(fields: [userId], references: [id])
   reports    reports[]
 
   @@index([pondId], name: "pondId")
@@ -93,6 +95,7 @@ model users {
   feeds              feeds[]
   ponds              ponds[]
   farms              farms[]
+  stocks             stocks[]
   transactions       transactions[]
 }
 

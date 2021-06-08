@@ -1,5 +1,7 @@
 const routes = require('express').Router();
 const location = require('./location')
+const stock = require('./stock')
+const pond = require('./pond')
 const farm = require('./farm')
 const auth = require('./auth')
 const createError = require('http-errors')
@@ -13,6 +15,8 @@ routes.all("/", (req, res)=> {
 })
 
 routes.use('/location', location)
+routes.use('/pond', pond)
+routes.use('/stock', stock)
 routes.use('/farm', farm)
 routes.use('/auth', auth)
 
