@@ -38,6 +38,7 @@ model ponds {
   length    Int?
   width     Int?
   depth     Int?
+  description   String
   volume    Int?
   updatedAt DateTime?    @updatedAt
   createdAt DateTime  @default(now())

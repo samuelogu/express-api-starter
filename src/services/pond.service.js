@@ -3,11 +3,13 @@ const db = require('../connectors/knex')
 class farmService {
 
     static async add(data) {
-        return db.table('farms').insert(data)
+        const { width, depth, length } = data
+        data.volume = ( width * depth * length ) * 1000
+        return db.table('ponds').insert(data)
     }
 
     static async find(userId) {
-        await db.table('ponds').where('userId', userId)
+        return db.table('ponds').where('userId', userId)
     }
 
 }

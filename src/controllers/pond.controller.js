@@ -47,10 +47,10 @@ class pondController {
 
         const { name, id } = req.user
 
-        try {
+            try {
             const data = await pond.find(id)
 
-            res.status(200).json({
+                res.status(200).json({
                 status: true,
                 message: `${name} pond`,
                 data
