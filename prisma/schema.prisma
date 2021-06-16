@@ -51,9 +51,9 @@ model ponds {
 
 model stocks {
   id                  Int       @id @default(autoincrement())
-  average_fish_weight Int?
-  fingerling_price    Int?
-  fingerling_quantity Int?
+  weight Int?
+  price    Int?
+  quantity Int?
   stocking_date       String?   @db.VarChar(100)
   stocking_month      String?   @db.VarChar(100)
   updatedAt           DateTime?  @updatedAt
