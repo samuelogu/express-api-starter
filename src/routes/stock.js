@@ -6,6 +6,6 @@ const validator = require('../middlewares/validator')
 const schemas = require('../validators/stock.validator')
 
 routes.get('/', auth, stock.find)
-routes.post("/", [auth, validator(schemas.add)], auth, stock.add)
+routes.post("/", [auth, validator(schemas.add)], stock.add)
 
 module.exports = routes;

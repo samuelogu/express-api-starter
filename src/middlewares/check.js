@@ -1,4 +1,5 @@
 const userService = require('../services/user.service')
+const pondService = require('../services/pond.service')
 const createError = require('http-errors')
 
 module.exports = {
@@ -63,6 +64,20 @@ module.exports = {
 
         if (!check.length) return next(createError.BadRequest('Invalid user ID'))
 
+        next()
+
+    },
+
+    async pondId(req, res, next) {
+
+        let { id } = req.params
+        let userId = req.user.id
+
+        const check = await pondService.findUserPond(id, userId)
+
+        if (!check.length) return next(createError.BadRequest('Invalid pond ID'))
+
+        req.body.id = id
         next()
 
     }

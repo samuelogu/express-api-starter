@@ -34,7 +34,7 @@ class stockController {
 
             res.status(206).json({
                 status: true,
-                message: "stock successfully created",
+                message: "stock successfully added",
                 data
             })
         } catch (e) {
