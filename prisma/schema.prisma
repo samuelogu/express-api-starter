@@ -63,6 +63,7 @@ model stocks {
   userId              Int
   user                users     @relation(fields: [userId], references: [id])
   reports    reports[]
+  general_reports    general_reports[]
 
   @@index([pondId], name: "pondId")
 }
@@ -126,7 +127,7 @@ model reports {
   stock      stocks     @relation(fields: [stockId], references: [id])
   day                  Int?
   present_quantity     Decimal? @db.Decimal(11, 0)
-  dailly_mortality     Decimal? @db.Decimal(11, 0)
+  daily_mortality     Decimal? @db.Decimal(11, 0)
   cumulative_mortality Decimal? @db.Decimal(11, 0)
   average_weight       Decimal? @db.Decimal(10, 0)
   total_weight         Decimal? @db.Decimal(10, 0)
@@ -134,7 +135,34 @@ model reports {
   cumulative_feed_gift Decimal? @db.Decimal(10, 0)
   cumulative_feed_cost Decimal? @db.Decimal(10, 0)
   total_weight_gain    Decimal? @db.Decimal(10, 0)
+  feed_cost    Decimal? @db.Decimal(10, 0)
+  fcr    Decimal? @db.Decimal(10, 0)
+  pond_volume    Decimal? @db.Decimal(10, 0)
+  body_weight_fed    Decimal? @db.Decimal(10, 0)
+  average_weight_stocking    Decimal? @db.Decimal(10, 0)
   updatedAt   DateTime?  @updatedAt
+  createdAt   DateTime  @default(now())
+}
+
+model general_reports {
+  id                   Int      @id @default(autoincrement()) @db.UnsignedInt
+  stockId             Int
+  stock      stocks     @relation(fields: [stockId], references: [id])
+  month                  Int?
+  feeding_day     Int
+  daily_mortality     Decimal? @db.Decimal(11, 0)
+  cumulative_mortality Decimal? @db.Decimal(11, 0)
+  average_weight       Decimal? @db.Decimal(10, 0)
+  feeding_period         String
+  feed_gift            Decimal? @db.Decimal(10, 0)
+  cumulative_feed_gift Decimal? @db.Decimal(10, 0)
+  cumulative_feed_cost Decimal? @db.Decimal(10, 0)
+  total_weight_gain    Decimal? @db.Decimal(10, 0)
+  feed_cost    Decimal? @db.Decimal(10, 0)
+  fcr    Decimal? @db.Decimal(10, 0)
+  pond_volume    Decimal? @db.Decimal(10, 0)
+  body_weight_fed    Decimal? @db.Decimal(10, 0)
+  average_weight_stocking    Decimal? @db.Decimal(10, 0)
   createdAt   DateTime  @default(now())
 }
 

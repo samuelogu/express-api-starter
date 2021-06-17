@@ -1,6 +1,6 @@
 const db = require('../connectors/knex')
 
-class stockService {
+class reportService {
 
     static async add(data) {
         return db.table('stocks').insert(data)
@@ -12,4 +12,4 @@ class stockService {
 
 }
 
-module.exports = stockService;
+module.exports = reportService;
