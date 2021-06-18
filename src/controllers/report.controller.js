@@ -1,5 +1,6 @@
 const report = require('../services/report.service')
 const createError = require('http-errors')
+const moment = require('moment')
 
 class reportController {
 
@@ -48,12 +49,18 @@ class reportController {
             let { stock_id } = req.params
 
         try {
-            const data = await report.find(stock_id)
+
+            const reports = await report.find(stock_id);
+            const latestReport = reports ? reports.reverse()[0] : null
+            const checkDate = latestReport ? moment().diff(latestReport.createdAt, 'days') : null
+            const isToday = checkDate === 0
+            const day = reports.length + 1
+            const month = parseInt((day / 30).toString().split(".")[0]) + 1
 
             res.status(200).json({
                 status: true,
                 message: `Stock general report`,
-                data
+                data: { reports, day, month, isToday }
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))

@@ -10,6 +10,10 @@ class reportService {
         return db.table('general_reports').where('stockId', id)
     }
 
+    static async reportCount(id) {
+        return db.table('reports').where('stockId', id)
+    }
+
 }
 
 module.exports = reportService;
