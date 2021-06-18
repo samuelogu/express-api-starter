@@ -1,5 +1,6 @@
 const userService = require('../services/user.service')
 const pondService = require('../services/pond.service')
+const stockService = require('../services/stock.service')
 const createError = require('http-errors')
 
 module.exports = {
@@ -13,19 +14,6 @@ module.exports = {
         if (checkEmail.length) return next(createError.NotFound('Account with email address already exist'))
 
         req.user = checkEmail[0]
-        next()
-
-    },
-
-    async username (req, res, next) {
-
-        const { username } = req.body
-
-        const checkUsername = await userService.findByUsername(username)
-
-        if (checkUsername.length) return next(createError.NotFound('Account with username already exist exist'))
-
-        req.user = checkUsername[0]
         next()
 
     },
@@ -78,6 +66,19 @@ module.exports = {
         if (!check.length) return next(createError.BadRequest('Invalid pond ID'))
 
         req.body.id = id
+        next()
+
+    },
+
+    async stockId(req, res, next) {
+
+        let { stock_id } = req.params
+        let userId = req.user.id
+
+        const check = await stockService.findUserStock(stock_id, userId)
+
+        if (!check.length) return next(createError.BadRequest('Invalid stock ID'))
+
         next()
 
     }

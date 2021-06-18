@@ -45,14 +45,14 @@ class reportController {
 
         static find = async (req, res, next) => {
 
-        const { name, id } = req.user
+            let { stock_id } = req.params
 
         try {
-            const data = await report.find(id)
+            const data = await report.find(stock_id)
 
             res.status(200).json({
                 status: true,
-                message: `${name} stocks`,
+                message: `Stock general report`,
                 data
             })
         } catch (e) {

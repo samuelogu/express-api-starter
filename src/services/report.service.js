@@ -6,8 +6,8 @@ class reportService {
         return db.table('stocks').insert(data)
     }
 
-    static async find(userId) {
-        return db.table('stocks').where('userId', userId)
+    static async find(id) {
+        return db.table('general_reports').where('stockId', id)
     }
 
 }

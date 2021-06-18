@@ -10,6 +10,10 @@ class stockService {
         return db.table('stocks').where('userId', userId)
     }
 
+    static async findUserStock(id, userId) {
+        return db.table('stocks').where('id', id).where('userId', userId)
+    }
+
 }
 
 module.exports = stockService;

@@ -8,6 +8,9 @@ const schemas = {
         fcr: Joi.number().required(),
         body_weight_fed: Joi.date().required(),
         stocking_month: Joi.date().required()
+    }),
+    find: Joi.object().keys({
+        stock_id: Joi.number()
     })
 }
 module.exports = schemas;
