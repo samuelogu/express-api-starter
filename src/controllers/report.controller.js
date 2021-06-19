@@ -50,17 +50,53 @@ class reportController {
 
         try {
 
+            function calculateFeedingPeriod(month) {
+                let feeding_period
+                switch (month) {
+                    case 1:
+                        feeding_period = '1 to 30'
+                        break
+                    case 2:
+                        feeding_period = '31 to 60'
+                        break
+                    case 3:
+                        feeding_period = '61 to 90'
+                        break
+                    case 4:
+                        feeding_period = '91 to 120'
+                        break
+                    case 5:
+                        feeding_period = '121 to 150'
+                        break
+                    case 6:
+                        feeding_period = '151 to 180'
+                        break
+                    case 7:
+                        feeding_period = '181 to 210'
+                        break
+                    case 8:
+                        feeding_period = '211 to 240'
+                        break
+                }
+                return feeding_period
+            }
+
             const reports = await report.find(stock_id);
             const latestReport = reports ? reports.reverse()[0] : null
             const checkDate = latestReport ? moment().diff(latestReport.createdAt, 'days') : null
             const isToday = checkDate === 0
             const day = reports.length + 1
             const month = parseInt((day / 30).toString().split(".")[0]) + 1
+            const feeding_period = calculateFeedingPeriod(month)
+            const feeding_day = parseInt(feeding_period.split(" ")[0])
+            const feed_cost = latestReport ? latestReport.feed_cost : 0
+            const fcr = latestReport ? latestReport.fcr : 0
+            const feed_brand = latestReport ? latestReport.feed_brand : ''
 
             res.status(200).json({
                 status: true,
                 message: `Stock general report`,
-                data: { reports, day, month, isToday }
+                data: { reports, day, month, isToday, feeding_day, feeding_period, feed_cost, fcr, feed_brand }
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))
