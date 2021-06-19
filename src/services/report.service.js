@@ -6,12 +6,13 @@ class reportService {
     static async add(data) {
         const { stockId } = data
         const report = await this.find(stockId)
-
-        report ? await this.updateReport(data) : await this.addReport(data)
-
         const calculatedData = await this.calculateData(data, report)
 
-        return db.table('stocks').insert(data)
+        report ? await this.updateReport(calculatedData) : await this.addReport(calculatedData)
+
+
+        return db.table('stocks').insert(calculatedData)
+
     }
 
     static async calculateData(data, report) {
@@ -29,7 +30,7 @@ class reportService {
         data.cumulative_feed_gift = data.feed_gift_kg / 15
         data.cumulative_feed_gift_kg = data.cumulative_feed_gift / 1000
         data.cumulative_feed_gift_bag = data.cumulative_feed_gift_kg / 15
-        data.feed_cost = previousReport ? previousReport.cumulative_mortality + daily_mortality : 0
+        data.feed_cost_kg = data.feed_gift * (data.feed_cost / 15)
         data.cumulative_feed_cost = data.cumulative_feed_gift_bag * data.feed_cost
         data.total_weight_gain = data.feed_gift * data.fcr
         return data

@@ -137,7 +137,7 @@ model reports {
   cumulative_feed_gift      Decimal? @db.Decimal(10, 0)
   cumulative_feed_gift_kg   Decimal? @db.Decimal(10, 0)
   cumulative_feed_gift_bag  Decimal? @db.Decimal(10, 0)
-  feed_cost                 Decimal? @db.Decimal(10, 0)
+  feed_cost_kg                 Decimal? @db.Decimal(10, 0)
   cumulative_feed_cost      Decimal? @db.Decimal(10, 0)
   total_weight_gain         Decimal? @db.Decimal(10, 0)
   createdAt                 DateTime  @default(now())
