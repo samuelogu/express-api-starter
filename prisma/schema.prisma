@@ -127,19 +127,19 @@ model reports {
   stock                     stocks     @relation(fields: [stockId], references: [id])
   day                       Int?
   month                     Int?
-  present_quantity          Decimal? @db.Decimal(11, 0)
-  daily_mortality           Decimal? @db.Decimal(11, 0)
-  cumulative_mortality      Decimal? @db.Decimal(11, 0)
-  average_weight            Decimal? @db.Decimal(10, 0)
-  total_weight              Decimal? @db.Decimal(10, 0)
-  feed_gift                 Decimal? @db.Decimal(10, 0)
-  feed_gift_kg              Decimal? @db.Decimal(10, 0)
-  cumulative_feed_gift      Decimal? @db.Decimal(10, 0)
-  cumulative_feed_gift_kg   Decimal? @db.Decimal(10, 0)
-  cumulative_feed_gift_bag  Decimal? @db.Decimal(10, 0)
-  feed_cost_kg                 Decimal? @db.Decimal(10, 0)
-  cumulative_feed_cost      Decimal? @db.Decimal(10, 0)
-  total_weight_gain         Decimal? @db.Decimal(10, 0)
+  present_quantity          Int?
+  daily_mortality           Int?
+  cumulative_mortality      Int?
+  average_weight            Decimal? @db.Decimal(12, 6)
+  total_weight              Decimal? @db.Decimal(12, 6)
+  feed_gift                 Decimal? @db.Decimal(12, 6)
+  feed_gift_kg              Decimal? @db.Decimal(12, 6)
+  cumulative_feed_gift      Decimal? @db.Decimal(12, 6)
+  cumulative_feed_gift_kg   Decimal? @db.Decimal(12, 6)
+  cumulative_feed_gift_bag  Decimal? @db.Decimal(12, 6)
+  feed_cost_kg                 Decimal? @db.Decimal(14, 6)
+  cumulative_feed_cost      Decimal? @db.Decimal(12, 6)
+  total_weight_gain         Decimal? @db.Decimal(12, 6)
   createdAt                 DateTime  @default(now())
 }
 
@@ -151,11 +151,10 @@ model general_reports {
   feeding_day     Int
   feeding_period         String
   feed_brand         String
-  feed_cost    Decimal? @db.Decimal(10, 0)
-  fcr    Decimal? @db.Decimal(10, 0)
-  pond_volume    Decimal? @db.Decimal(10, 0)
-  body_weight_fed    Decimal? @db.Decimal(10, 0)
-  average_weight_stocking    Decimal? @db.Decimal(10, 0)
+  feed_cost    Int?
+  fcr    Decimal? @db.Decimal(10, 1)
+  body_weight_fed    Int?
+  average_weight_stocking    Decimal? @db.Decimal(10, 6)
   createdAt   DateTime  @default(now())
 }
 

@@ -5,22 +5,59 @@ class reportService {
 
     static async add(data) {
         const { stockId } = data
-        const report = await this.find(stockId)
-        const calculatedData = await this.calculateData(data, report)
+        const report = await this.findReport(stockId)
+        const previousReport = report ? report.reverse()[0] : null
+        const calculatedData = await this.calculateData(data, previousReport)
+        const { month, feeding_day, feeding_period, feed_brand, feed_cost, fcr, body_weight_fed } = calculatedData
+        const general_report = {
+            stockId, month, feeding_day, feeding_period, feed_brand, feed_cost, fcr, body_weight_fed
+        }
+        report.length ? await this.updateReport(general_report) : await this.addReport(general_report)
 
-        report ? await this.updateReport(calculatedData) : await this.addReport(calculatedData)
+        delete calculatedData.feeding_day
+        delete calculatedData.feed_brand
+        delete calculatedData.feeding_period
+        delete calculatedData.feed_cost
+        delete calculatedData.userId
+        delete calculatedData.fcr
+        delete calculatedData.body_weight_fed
 
-
-        return db.table('stocks').insert(calculatedData)
+        return db.table('reports').insert(calculatedData)
 
     }
 
-    static async calculateData(data, report) {
+    static async update(data) {
+        const { stockId } = data
+        const report = await this.findReport(stockId)
+        const g_r = await this.find(stockId)
+        const previousReport = report ? report.reverse()[0] : null
+        const { id } = previousReport
+        const calculatedData = await this.calculateData(data, previousReport)
+
+        const { month, feeding_day, feeding_period, feed_brand, feed_cost, fcr, body_weight_fed } = calculatedData
+        const general_report = {
+            stockId, month, feeding_day, feeding_period, feed_brand, feed_cost, fcr, body_weight_fed
+        }
+        g_r.length ? await this.updateReport(general_report) : await this.addReport(general_report)
+
+        delete calculatedData.feeding_day
+        delete calculatedData.feed_brand
+        delete calculatedData.feeding_period
+        delete calculatedData.feed_cost
+        delete calculatedData.userId
+        delete calculatedData.fcr
+        delete calculatedData.body_weight_fed
+
+        return db.table('reports').where('id', id).update(calculatedData)
+
+    }
+
+    static async calculateData(data, previousReport) {
 
         const { daily_mortality, stockId } = data
         const stock = await stockService.get(stockId)
-        const { quantity, weight } = stock
-        const previousReport = report ? report.reverse()[0] : null
+
+        const { quantity, weight } = stock[0]
         data.cumulative_mortality = previousReport ? previousReport.cumulative_mortality + daily_mortality : 0
         data.present_quantity = quantity - data.cumulative_mortality
         data.average_weight = previousReport ? (previousReport.total_weight + previousReport.total_weight_gain) / previousReport.present_quantity : weight
@@ -47,6 +84,10 @@ class reportService {
 
     static async find(id) {
         return db.table('general_reports').where('stockId', id)
+    }
+
+    static async findReport(id) {
+        return db.table('reports').where('stockId', id)
     }
 
     static async reportCount(id) {

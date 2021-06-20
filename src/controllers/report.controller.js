@@ -35,7 +35,7 @@ class reportController {
 
             res.status(206).json({
                 status: true,
-                message: "report successfully added",
+                message: "Today's report successfully submitted",
                 data
             })
         } catch (e) {
@@ -82,21 +82,25 @@ class reportController {
             }
 
             const reports = await report.find(stock_id);
+            const reportsD = await report.findReport(stock_id);
             const latestReport = reports ? reports.reverse()[0] : null
+            const reportData = reportsD ? reportsD.reverse()[0] : null
             const checkDate = latestReport ? moment().diff(latestReport.createdAt, 'days') : null
             const isToday = checkDate === 0
-            const day = reports.length + 1
+            const day = isToday ? reports.length : reports.length + 1
             const month = parseInt((day / 30).toString().split(".")[0]) + 1
             const feeding_period = calculateFeedingPeriod(month)
             const feeding_day = parseInt(feeding_period.split(" ")[0])
             const feed_cost = latestReport ? latestReport.feed_cost : 0
             const fcr = latestReport ? latestReport.fcr : 0
+            const body_weight_fed = latestReport ? latestReport.body_weight_fed : 0
+            const daily_mortality = reportData ? reportData.daily_mortality : 0
             const feed_brand = latestReport ? latestReport.feed_brand : ''
 
             res.status(200).json({
                 status: true,
                 message: `Stock general report`,
-                data: { reports, day, month, isToday, feeding_day, feeding_period, feed_cost, fcr, feed_brand }
+                data: { reportData, day, month, isToday, feeding_day, feeding_period, feed_cost, fcr, feed_brand, body_weight_fed, daily_mortality }
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))
@@ -106,14 +110,17 @@ class reportController {
 
     static update = async (req, res, next) => {
 
-        const { body, title } = req.body
-        const { id } = req.params
+        const { id } = req.user
+
+        req.body.userId = id
 
         try {
-            const data = await report.updatePost(id, title, body)
+
+            const data = await report.update(req.body)
+
             res.status(200).json({
                 status: true,
-                message: "report successfully updated",
+                message: "Today's report successfully updated",
                 data
             })
         } catch (e) {
