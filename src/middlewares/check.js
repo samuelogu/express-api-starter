@@ -81,6 +81,16 @@ module.exports = {
 
         next()
 
+    },
+
+    async wallet(req, res, next) {
+
+        const { wallet } = req.user
+
+        if (wallet < 50) return next(createError.BadRequest('Insufficient funds in your wallet'))
+
+        next()
+
     }
 
 }

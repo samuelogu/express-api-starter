@@ -99,6 +99,17 @@ model users {
   farms              farms[]
   stocks             stocks[]
   transactions       transactions[]
+  downloads         downloads[]
+}
+
+model downloads {
+  id       Int     @id @default(autoincrement())
+  userId    Int
+  user      users     @relation(fields: [userId], references: [id])
+  stockId     Int
+  month     Int
+  reference     String @db.VarChar(100)
+  createdAt          DateTime       @default(now())
 }
 
 model cities {
@@ -137,7 +148,7 @@ model reports {
   cumulative_feed_gift      Decimal? @db.Decimal(12, 6)
   cumulative_feed_gift_kg   Decimal? @db.Decimal(12, 6)
   cumulative_feed_gift_bag  Decimal? @db.Decimal(12, 6)
-  feed_cost_kg                 Decimal? @db.Decimal(14, 6)
+  feed_cost_kg                 Decimal? @db.Decimal(16, 6)
   cumulative_feed_cost      Decimal? @db.Decimal(12, 6)
   total_weight_gain         Decimal? @db.Decimal(12, 6)
   createdAt                 DateTime  @default(now())

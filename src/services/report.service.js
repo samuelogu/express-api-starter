@@ -1,5 +1,6 @@
 const db = require('../connectors/knex')
 const stockService = require('./stock.service')
+const randomstring = require("randomstring")
 
 class reportService {
 
@@ -56,7 +57,6 @@ class reportService {
 
         const { daily_mortality, stockId } = data
         const stock = await stockService.get(stockId)
-
         const { quantity, weight } = stock[0]
         data.cumulative_mortality = previousReport ? previousReport.cumulative_mortality + daily_mortality : 0
         data.present_quantity = quantity - data.cumulative_mortality
@@ -92,6 +92,14 @@ class reportService {
 
     static async reportCount(id) {
         return db.table('reports').where('stockId', id)
+    }
+
+    static async download(data) {
+        const wallet = data.wallet - 50
+        // await db.table('users').where('id', data.userId).update({ wallet })
+        data.reference = randomstring.generate()
+        console.log(data);
+        // return db.table('downloads').insert(data)
     }
 
 }

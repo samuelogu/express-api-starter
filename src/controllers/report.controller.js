@@ -4,17 +4,19 @@ const moment = require('moment')
 
 class reportController {
 
-    static all = async (req, res, next) => {
+    static download = async (req, res, next) => {
 
-        const { id } = req.user
+        const { id, wallet, email } = req.user
+        req.body.userId = id
+        req.body.wallet = wallet
 
         try {
 
-            const data = await report.find(id)
+            const data = await report.download(req.body)
 
             res.status(200).json({
                 status: true,
-                message: "User ponds",
+                message: `Download link successfully sent to ${email}`,
                 data
             })
         } catch (e) {
@@ -85,9 +87,18 @@ class reportController {
             const reportsD = await report.findReport(stock_id);
             const latestReport = reports ? reports.reverse()[0] : null
             const reportData = reportsD ? reportsD.reverse()[0] : null
-            const checkDate = latestReport ? moment().diff(latestReport.createdAt, 'days') : null
-            const isToday = checkDate === 0
-            const day = isToday ? reports.length : reports.length + 1
+            // const checkDate = reportData ? moment().diff(reportData.createdAt, 'days') : null
+            const vd = reportData ? moment(reportData.createdAt, 'MM-DD-YYYY') : null
+            const lastDay = reportData ? vd.date() : null
+            const lastMonth = reportData ? vd.month() + 1 : null
+            let checkDate
+            if (reportData) {
+                    checkDate = lastDay ===  moment().date() && lastMonth === (moment().month() + 1)
+            }else {
+                checkDate = false
+            }
+            const isToday = checkDate
+            const day = isToday ? reportsD.length : reportsD.length + 1
             const month = parseInt((day / 30).toString().split(".")[0]) + 1
             const feeding_period = calculateFeedingPeriod(month)
             const feeding_day = parseInt(feeding_period.split(" ")[0])
@@ -129,16 +140,17 @@ class reportController {
 
     }
 
-    static remove = async (req, res, next) => {
+    static downloadReports = async (req, res, next) => {
 
-        const { id } = req.params
+        const { stock_id } = req.params
 
         try {
-            await report.removePost(id)
+            const data = await report.find(stock_id)
+
             res.status(200).json({
                 status: true,
-                message: "report successfully removed",
-                data: null
+                message: "General reports",
+                data
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))

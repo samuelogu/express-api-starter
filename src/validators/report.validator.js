@@ -13,6 +13,10 @@ const schemas = {
         feed_brand: Joi.string(),
         feeding_period: Joi.string()
     }),
+    download: Joi.object().keys({
+        stockId: Joi.number().required(),
+        month: Joi.number().required()
+    }),
     find: Joi.object().keys({
         stock_id: Joi.number()
     })
