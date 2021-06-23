@@ -5,6 +5,7 @@ const pond = require('./pond')
 const farm = require('./farm')
 const report = require('./report')
 const auth = require('./auth')
+const wallet = require('./wallet')
 const createError = require('http-errors')
 
 routes.all("/", (req, res)=> {
@@ -19,6 +20,7 @@ routes.use('/location', location)
 routes.use('/pond', pond)
 routes.use('/stock', stock)
 routes.use('/farm', farm)
+routes.use('/wallet', wallet)
 routes.use('/report', report)
 routes.use('/auth', auth)
 

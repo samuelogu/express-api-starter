@@ -143,6 +143,10 @@ class userService {
 
     }
 
+    static async cards(userId) {
+        return db.table('cards').where('userId', userId)
+    }
+
 }
 
 module.exports = userService;

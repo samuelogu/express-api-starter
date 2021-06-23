@@ -70,10 +70,10 @@ model stocks {
 
 model transactions {
   id          Int       @id @default(autoincrement())
-  type        Int?
+  type        Int?      @default(0)
   description String?   @db.VarChar(100)
-  source      String?   @db.VarChar(10)
-  updatedAt   DateTime?  @updatedAt
+  authorization_code String?
+  reference String
   createdAt   DateTime  @default(now())
   userId      Int
   user        users     @relation(fields: [userId], references: [id])
@@ -100,6 +100,26 @@ model users {
   stocks             stocks[]
   transactions       transactions[]
   downloads         downloads[]
+  cards         cards[]
+}
+
+model cards {
+  id       Int     @id @default(autoincrement())
+  userId    Int
+  user      users     @relation(fields: [userId], references: [id])
+  authorization_code     String
+  card_type     String
+  last4     String
+  exp_month     String
+  exp_year     String
+  bin     String
+  bank     String
+  channel     String?
+  signature     String
+  reusable     String?
+  country_code     String?
+  account_name     String?
+  createdAt          DateTime       @default(now())
 }
 
 model downloads {
