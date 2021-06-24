@@ -114,11 +114,7 @@ model cards {
   exp_year     String
   bin     String
   bank     String
-  channel     String?
   signature     String
-  reusable     String?
-  country_code     String?
-  account_name     String?
   createdAt          DateTime       @default(now())
 }
 

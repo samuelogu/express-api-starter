@@ -2,17 +2,14 @@ const crypto = require('crypto');
 const createError = require('http-errors')
 const axios = require('axios');
 const db = require('../connectors/knex')
-const { chargeConfig, refundConfig, getBanks, resolveAccount, transferRecipient, withdraw } = require("./paystack.service")
+const paystack = require("./paystack.service")
 const moment = require('moment')
 
 class walletService {
 
     static async addCard(cardDetails) {
-
         cardDetails.expiry_month = moment(cardDetails.expiry_date).format('MM')
-        cardDetails.expiry_year = moment(cardDetails.expiry_date).format('YYYY')
-        console.log(cardDetails);
-        return
+        cardDetails.expiry_year = moment(cardDetails.expiry_date).format('YY')
 
         const { email, cvv, number, expiry_month, expiry_year, pin, userId } = cardDetails
 
@@ -27,20 +24,20 @@ class walletService {
             },
             pin
         }
-        const chargeResponse = await axios(chargeConfig(cardPayload));
+        const chargeResponse = await paystack.charge(cardPayload);
         //if charge was successful, refund users money sharp o
-        if (chargeResponse.data.message === 'Charge attempted') {
+        if (chargeResponse.data.status) {
             let refundPayload = JSON.stringify({
                 amount: 50 * 100,
                 transaction: reference,
             });
-            const refundResponse = await axios(refundConfig(refundPayload));
+            const refundResponse = await paystack.refundConfig(refundPayload)
             //after refunding, get the auth details from paystack and store in the database
             const { authorization_code, card_type, last4, exp_month, exp_year, bin, bank, signature } = chargeResponse.data.data.authorization;
             //check if user has already added this card to the database
-            const cardExists = await this. findSignature(signature)
+            const cardExists = await this.findSignature(signature)
 
-            if (cardExists) throw createError.Conflict("Card Details already Exist")
+            if (cardExists.length) throw createError.Conflict("Card Details already Exist")
 
 
             const cardAuthDetails = {
@@ -64,7 +61,7 @@ class walletService {
     }
 
     static async addCardToDb(data) {
-        return db.table('farms').insert(data)
+        return db.table('cards').insert(data)
     }
 
     static async findSignature(signature) {
@@ -84,7 +81,7 @@ class walletService {
         authorization_code
     })
 
-    const chargeResponse = await axios(chargeConfig(data))
+    const chargeResponse = await paystack.chargeConfig(data)
 
     if (!chargeResponse.data.status) throw createError.BadRequest()
 
@@ -95,7 +92,7 @@ class walletService {
     }
 
     async newTransaction(data) {
-
+        return db.table('transactions').insert(data)
     }
 
 }

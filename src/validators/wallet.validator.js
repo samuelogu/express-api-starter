@@ -2,10 +2,10 @@ const Joi = require('joi')
 
 const schemas = {
     addCard: Joi.object().keys({
-        cvv: Joi.number().min(3).max(4).required(),
-        number: Joi.number().min(13).max(19).required(),
+        cvv: Joi.string().min(3).required(),
+        number: Joi.string().min(13).required(),
         expiry_date: Joi.date().required(),
-        pin: Joi.number().min(3).max(4).required(),
+        pin: Joi.string().min(3).required(),
     }),
     fund: Joi.object().keys({
         amount: Joi.number().required(),
