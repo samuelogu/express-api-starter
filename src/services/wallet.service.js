@@ -26,19 +26,23 @@ class walletService {
         }
         const chargeResponse = await paystack.charge(cardPayload);
         //if charge was successful, refund users money sharp o
-        if (chargeResponse.data.status) {
+        if (!chargeResponse.data.status)  throw createError.BadRequest("Unable to add card at the moment")
+
             let refundPayload = JSON.stringify({
                 amount: 50 * 100,
                 transaction: reference,
             });
-            const refundResponse = await paystack.refundConfig(refundPayload)
+
+            await paystack.refund(refundPayload)
+
             //after refunding, get the auth details from paystack and store in the database
-            const { authorization_code, card_type, last4, exp_month, exp_year, bin, bank, signature } = chargeResponse.data.data.authorization;
+            let { authorization_code, card_type, last4, exp_month, exp_year, bin, bank, signature } = chargeResponse.data.data.authorization;
             //check if user has already added this card to the database
             const cardExists = await this.findSignature(signature)
 
             if (cardExists.length) throw createError.Conflict("Card Details already Exist")
 
+            exp_year = expiry_year
 
             const cardAuthDetails = {
                 userId,
@@ -54,10 +58,6 @@ class walletService {
 
             return await this.addCardToDb(cardAuthDetails);
 
-        }
-
-        throw createError.BadRequest("Unable to add card at the moment")
-
     }
 
     static async addCardToDb(data) {
@@ -68,31 +68,42 @@ class walletService {
         return db.table('cards').where('signature', signature)
     }
 
+    static async getTransactions(userId) {
+        return db.table('transactions').where('userId', userId)
+    }
+
+    static async getBalance(userId) {
+        const user = await db.table('users').where('id', userId)
+        return user[0].wallet
+    }
+
+    static async updateBalance(userId, amount) {
+        const oldBalance = await this.getBalance(userId)
+        const wallet = oldBalance + amount
+        await db.table('users').where('id', userId).update({ wallet })
+    }
+
     static async chargeSavedCard (details) {
 
         const { amount, userId, email, authorization_code } = details
 
-    const reference = crypto.randomBytes(5).toString('hex');
+        const data = {
+            email,
+            amount: amount * 100,
+            authorization_code
+        }
 
-    const data = JSON.stringify({
-        email,
-        amount: amount * 100,
-        reference,
-        authorization_code
-    })
-
-    const chargeResponse = await paystack.chargeConfig(data)
-
-    if (!chargeResponse.data.status) throw createError.BadRequest()
-
-        return await this.newTransaction({
-            userId, authorization_code, reference, description: 'Fund wallet'
+        paystack.chargeAuthorization(data).then( async response => {
+            if (!response.data.status) throw createError.BadRequest("Unable to charge card at the moment")
+            const data = response.data.data
+            const { reference } = data
+            await this.updateBalance(userId, amount)
+            await db.table('transactions').insert({
+                amount, userId, authorization_code, reference, description: 'Fund wallet', type: 1
+            })
+            return data
         })
 
-    }
-
-    async newTransaction(data) {
-        return db.table('transactions').insert(data)
     }
 
 }

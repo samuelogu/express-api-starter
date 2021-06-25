@@ -13,11 +13,30 @@ class walletController {
 
         try {
 
-            const data = wallet.chargeSavedCard(req.body)
+            const data = await wallet.chargeSavedCard(req.body)
+
+            res.status(400).json({
+                status: true,
+                message: `Wallet successfully funded with ₦${req.body.amount.toLocaleString()}`,
+                data
+            })
+        } catch (e) {
+            next(createError(e.statusCode, e.message))
+        }
+
+    }
+
+    static balance = async (req, res, next) => {
+
+        const { id, name } = req.user
+
+        try {
+
+            const data = await wallet.getBalance(id)
 
             res.status(200).json({
                 status: true,
-                message: "Wallet successfully funded",
+                message: `${name} available balance`,
                 data
             })
         } catch (e) {
@@ -34,9 +53,28 @@ class walletController {
 
             const data = await userService.cards(id)
 
-            res.status(206).json({
+            res.status(200).json({
                 status: true,
                 message: `${name} cards`,
+                data
+            })
+        } catch (e) {
+            next(createError(e.statusCode, e.message))
+        }
+
+    }
+
+    static transactions = async (req, res, next) => {
+
+        const { id, name } = req.user
+
+        try {
+
+            const data = await wallet.getTransactions(id)
+
+            res.status(200).json({
+                status: true,
+                message: `${name} wallet transactions`,
                 data
             })
         } catch (e) {

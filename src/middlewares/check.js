@@ -2,6 +2,7 @@ const userService = require('../services/user.service')
 const pondService = require('../services/pond.service')
 const stockService = require('../services/stock.service')
 const createError = require('http-errors')
+const db = require('../connectors/knex')
 
 module.exports = {
 
@@ -85,9 +86,24 @@ module.exports = {
 
     async wallet(req, res, next) {
 
-        const { wallet } = req.user
+        const { id } = req.user
+        const user = await db.table('users').where('id', id)
+        const wallet = user[0].wallet
 
         if (wallet < 50) return next(createError.BadRequest('Insufficient funds in your wallet'))
+
+        next()
+
+    },
+
+    async authorizationCode(req, res, next) {
+
+        const { id } = req.user
+        const { authorization_code } = req.body
+
+        const card = await db.table('cards').where('userId', id).where('authorization_code', authorization_code)
+
+        if (!card.length) return next(createError.BadRequest('Invalid card authorization code'))
 
         next()
 

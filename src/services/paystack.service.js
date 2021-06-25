@@ -18,7 +18,16 @@ class paystackService {
         }
     }
 
-    static async refundConfig(data) {
+    static async chargeAuthorization(data) {
+        try {
+            return await axios.post(`${url}/transaction/charge_authorization`, data, config)
+
+        }catch (e) {
+            throw createError.BadRequest(e.response.data.message)
+        }
+    }
+
+    static async refund(data) {
         await axios({
             method: 'post',
             url: 'https://api.paystack.co/refund',
@@ -71,7 +80,7 @@ class paystackService {
             data,
         })
     }
-    
+
 }
 
 module.exports = paystackService
