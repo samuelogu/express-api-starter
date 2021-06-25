@@ -83,6 +83,11 @@ class walletService {
         await db.table('users').where('id', userId).update({ wallet })
     }
 
+    static async addTransaction(data) {
+        console.log(data);
+        await db.table('transactions').insert(data)
+    }
+
     static async chargeSavedCard (details) {
 
         const { amount, userId, email, authorization_code } = details
@@ -93,16 +98,14 @@ class walletService {
             authorization_code
         }
 
-        paystack.chargeAuthorization(data).then( async response => {
-            if (!response.data.status) throw createError.BadRequest("Unable to charge card at the moment")
-            const data = response.data.data
-            const { reference } = data
-            await this.updateBalance(userId, amount)
-            await db.table('transactions').insert({
-                amount, userId, authorization_code, reference, description: 'Fund wallet', type: 1
-            })
-            return data
+        const response = await paystack.chargeAuthorization(data)
+        if (!response.data.status) throw createError.BadRequest("Unable to charge card at the moment")
+        const { reference } = response.data.data
+        await this.updateBalance(userId, amount)
+        await this.addTransaction({
+            amount, userId, authorization_code, reference, description: 'Fund wallet', type: 1
         })
+        return response.data.data
 
     }
 

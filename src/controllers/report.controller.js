@@ -6,9 +6,8 @@ class reportController {
 
     static download = async (req, res, next) => {
 
-        const { id, wallet, email } = req.user
+        const { id, email } = req.user
         req.body.userId = id
-        req.body.wallet = wallet
 
         try {
 

@@ -1,5 +1,6 @@
 const db = require('../connectors/knex')
 const stockService = require('./stock.service')
+const walletService = require('./wallet.service')
 const randomstring = require("randomstring")
 
 class reportService {
@@ -95,11 +96,11 @@ class reportService {
     }
 
     static async download(data) {
-        const wallet = data.wallet - 50
-        // await db.table('users').where('id', data.userId).update({ wallet })
+        const balance = await walletService.getBalance(data.userId)
+        const wallet = balance - 50
+        await db.table('users').where('id', data.userId).update({ wallet })
         data.reference = randomstring.generate()
-        console.log(data);
-        // return db.table('downloads').insert(data)
+        return db.table('downloads').insert(data)
     }
 
 }

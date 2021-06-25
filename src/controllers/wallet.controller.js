@@ -15,7 +15,7 @@ class walletController {
 
             const data = await wallet.chargeSavedCard(req.body)
 
-            res.status(400).json({
+            res.status(200).json({
                 status: true,
                 message: `Wallet successfully funded with ₦${req.body.amount.toLocaleString()}`,
                 data
