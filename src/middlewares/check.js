@@ -107,6 +107,18 @@ module.exports = {
 
         next()
 
+    },
+
+    async cardId(req, res, next) {
+
+        const { id } = req.user
+        const { card_id } = req.params
+        const card = await db.table('cards').where('userId', id).where('id', card_id)
+
+        if (!card.length) return next(createError.BadRequest('Invalid card ID'))
+
+        next()
+
     }
 
 }

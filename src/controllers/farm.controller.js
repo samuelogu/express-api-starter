@@ -47,7 +47,7 @@ class farmController {
             res.status(200).json({
                 status: true,
                 message: `${name} farm`,
-                data
+                data: data[0]
             })
         } catch (e) {
             next(createError(e.statusCode, e.message))

@@ -10,6 +10,9 @@ const schemas = {
     fund: Joi.object().keys({
         amount: Joi.number().required(),
         authorization_code: Joi.string().required()
+    }),
+    removeCard: Joi.object().keys({
+        card_id: Joi.number().required(),
     })
 }
 module.exports = schemas;

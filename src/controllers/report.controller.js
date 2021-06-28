@@ -8,6 +8,7 @@ class reportController {
 
         const { id, email } = req.user
         req.body.userId = id
+        req.body.email = email
 
         try {
 

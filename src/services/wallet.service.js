@@ -7,6 +7,10 @@ const moment = require('moment')
 
 class walletService {
 
+    static async removeCard(card_id) {
+        return db.table('cards').where('id', card_id).delete()
+    }
+
     static async addCard(cardDetails) {
         cardDetails.expiry_month = moment(cardDetails.expiry_date).format('MM')
         cardDetails.expiry_year = moment(cardDetails.expiry_date).format('YY')
@@ -69,7 +73,7 @@ class walletService {
     }
 
     static async getTransactions(userId) {
-        return db.table('transactions').where('userId', userId)
+        return db.table('transactions').where('userId', userId).orderBy('id', 'desc')
     }
 
     static async getBalance(userId) {
@@ -84,7 +88,6 @@ class walletService {
     }
 
     static async addTransaction(data) {
-        console.log(data);
         await db.table('transactions').insert(data)
     }
 

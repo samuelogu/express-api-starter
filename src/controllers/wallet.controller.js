@@ -104,6 +104,24 @@ class walletController {
 
     }
 
+    static removeCard = async (req, res, next) => {
+
+        const { card_id } = req.params
+        try {
+
+            const data = await wallet.removeCard(card_id)
+
+            res.status(206).json({
+                status: true,
+                message: `Card successfully removed`,
+                data
+            })
+        } catch (e) {
+            next(createError(e.statusCode, e.message))
+        }
+
+    }
+
 }
 
 module.exports = walletController;

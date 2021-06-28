@@ -11,7 +11,7 @@ class farmService {
     }
 
     static async find(userId) {
-        await db.table('farms').where('userId', userId)
+        return db.table('farms').where('userId', userId)
     }
 
 }

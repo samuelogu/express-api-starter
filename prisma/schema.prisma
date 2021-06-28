@@ -72,7 +72,7 @@ model transactions {
   id          Int       @id @default(autoincrement())
   type        Int?      @default(0)
   description String   @db.VarChar(100)
-  authorization_code String
+  authorization_code String?
   reference String
   amount Int
   createdAt   DateTime  @default(now())

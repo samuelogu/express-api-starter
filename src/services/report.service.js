@@ -1,6 +1,8 @@
 const db = require('../connectors/knex')
 const stockService = require('./stock.service')
 const walletService = require('./wallet.service')
+const mail = require('./mail.service')
+const url = process.env.URL
 const randomstring = require("randomstring")
 
 class reportService {
@@ -96,10 +98,20 @@ class reportService {
     }
 
     static async download(data) {
-        const balance = await walletService.getBalance(data.userId)
-        const wallet = balance - 50
+        const { userId } = data
+        const balance = await walletService.getBalance(userId)
+        const amount = 50
+        const wallet = balance - amount
         await db.table('users').where('id', data.userId).update({ wallet })
         data.reference = randomstring.generate()
+        const link = `${url}/download/${data.reference}`
+        await mail.send(data.email, `Month ${data.month} report`, '<p>A request has been made to get stock report for month ' + data.month +'. Click on the link below to view stock report.</p>' +
+            '<center><a href="'+link+'">'+link+'</a></center>' +
+            '<p>If this was a mistake please ignore and nothing will happen.</p>')
+        await walletService.addTransaction({
+            amount, userId, reference: data.reference, description: 'Report download', type: 0
+        })
+        delete data.email
         return db.table('downloads').insert(data)
     }
 
