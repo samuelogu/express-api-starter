@@ -4,7 +4,7 @@ This is a simple structured express application to get you started in build your
 
 ## Installation & Setup ##
 
-If you dont't have an existing server; You could get $100 in credit over 60 days from Digitalocean to deploy this. Signup [here](https://m.do.co/c/5caff7bbbeaa).
+If you dont't have an existing server; You could get $100 in credit over 60 days from Digitalocean to deploy this. Signup [here](https://m.do.co/c/d37ac183123b).
 
 `git clone https://github.com/samuelogu/express-api-starter.git`
 
